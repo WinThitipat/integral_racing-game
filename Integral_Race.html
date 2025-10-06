@@ -95,6 +95,8 @@
             <div class="car-popup" id="carPopup"></div>
         </div>
 
+        <button class="btn" onclick="goToAnotherPage()">🌐 Go to Another Page</button>
+
         <div class="stats">
             <div class="stat-box"><div class="stat-label">⏱️ เวลา</div><div class="stat-value" id="time">0s</div></div>
             <div class="stat-box"><div class="stat-label">⏰ เวลาเหลือ</div><div class="stat-value" id="timeLeft">3s</div></div>
@@ -575,6 +577,11 @@
                 }, 1000);
             }
         }
+
+    function goToAnotherPage() {
+        // Change this URL to your target page
+        window.location.href = "anotherpage.html";
+    }
 
         function startGame() {
             gameState = {
