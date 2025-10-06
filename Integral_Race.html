@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏎️ Integral Race</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; padding: 20px;
+        }
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px; padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px; width: 100%;
+        }
+        .header { text-align: center; margin-bottom: 20px; }
+        h1 {
+            color: #667eea; font-size: 2.5em; margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .stats {
+            display: flex; justify-content: space-around;
+            margin-bottom: 20px; gap: 15px; flex-wrap: wrap;
+        }
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; padding: 15px 25px;
+            border-radius: 10px; flex: 1; text-align: center;
+        }
+        .stat-label { font-size: 0.9em; opacity: 0.9; }
+        .stat-value { font-size: 1.8em; font-weight: bold; margin-top: 5px; }
+        canvas {
+            border: 3px solid #667eea; border-radius: 10px;
+            display: block; margin: 0 auto 20px; background: #f8f9fa;
+        }
+        .question-panel {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 20px; border-radius: 15px; margin-bottom: 20px; color: white;
+        }
+        .question-text { font-size: 1.3em; margin-bottom: 15px; text-align: center; font-weight: bold; }
+        .answers { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .answer-btn {
+            background: white; color: #f5576c; border: none; padding: 15px;
+            border-radius: 10px; font-size: 1.1em; font-weight: bold;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .answer-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); }
+        .answer-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .answer-btn.correct { background: #4caf50; color: white; }
+        .answer-btn.wrong { background: #f44336; color: white; }
+        .controls { display: flex; gap: 10px; justify-content: center; }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; border: none; padding: 12px 30px;
+            border-radius: 10px; font-size: 1.1em; font-weight: bold;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); }
+        .game-over {
+            text-align: center; padding: 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px; color: white; display: none;
+        }
+        .game-over h2 { font-size: 2em; margin-bottom: 15px; }
+        .game-over p { font-size: 1.2em; margin-bottom: 10px; }
+
+        /* popup เลือกรถ */
+        .car-popup-container { position: relative; display: inline-block; margin-bottom: 20px; }
+        .car-popup {
+            display: none; position: absolute; top: 100%; left: 0;
+            background: white; border-radius: 10px; padding: 10px;
+            margin-top: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 1000; min-width: 180px;
+        }
+        .car-option { display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
+        .car-option:hover { background: #f0f0f0; }
+        .car-preview { font-size: 1.5em; }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>🏎️ Integral Race</h1>
+            <p>ตอบโจทย์อินทิกรัลเพื่อบูสต์ความเร็ว!</p>
+        </div>
+        <!-- ปุ่มเลือกสีรถ -->
+        <div class="car-popup-container">
+            <button class="btn" id="carPopupBtn">🚗 เลือกรถ</button>
+            <div class="car-popup" id="carPopup"></div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box"><div class="stat-label">⏱️ เวลา</div><div class="stat-value" id="time">0s</div></div>
+            <div class="stat-box"><div class="stat-label">⏰ เวลาเหลือ</div><div class="stat-value" id="timeLeft">3s</div></div>
+            <div class="stat-box"><div class="stat-label">🎯 คะแนน</div><div class="stat-value" id="score">0</div></div>
+            <div class="stat-box"><div class="stat-label">⚡ ความเร็ว</div><div class="stat-value" id="speed">1.0x</div></div>
+            <div class="stat-box"><div class="stat-label">📍 ระยะทาง</div><div class="stat-value" id="distance">0%</div></div>
+        </div>
+
+        <canvas id="gameCanvas" width="fit" height="400px"></canvas>
+
+        <div class="question-panel" id="questionPanel" style="display: none;">
+            <div class="question-text" id="questionText">คลิก "เริ่มเกม" เพื่อเริ่มแข่งขัน!</div>
+            <div class="answers" id="answersContainer"></div>
+        </div>
+
+        <div class="game-over" id="gameOver">
+            <h2>🏁 จบเกม!</h2>
+            <p id="finalScore"></p>
+            <p id="finalTime"></p>
+            <button class="btn" onclick="restartGame()">🔄 เล่นอีกครั้ง</button>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="startBtn" onclick="startGame()">▶️ เริ่มเกม</button>
+            <button class="btn" id="pauseBtn" onclick="togglePause()" style="display: none;">⏸️ หยุดชั่วคราว</button>
+        </div>
+    </div>
+
+    <script>
+            const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const carPopup = document.getElementById('carPopup');
+        const carPopupBtn = document.getElementById('carPopupBtn');
+        
+        const carSkins = [
+            { name: 'Red Racer', color: '#f5576c', emoji: '🔴' },
+            { name: 'Blue Lightning', color: '#2196f3', emoji: '🔵' },
+            { name: 'Green Machine', color: '#4caf50', emoji: '🟢' },
+            { name: 'Purple Storm', color: '#9c27b0', emoji: '🟣' },
+            { name: 'Orange Blaze', color: '#ff9800', emoji: '🟠' },
+            { name: 'Pink Dream', color: '#e91e63', emoji: '🩷' }
+        ];
+
+        carPopupBtn.onclick = () => {
+            carPopup.style.display = carPopup.style.display === 'block' ? 'none' : 'block';
+        };
+
+        function renderCarPopup() {
+            carPopup.innerHTML = '';
+            carSkins.forEach((skin, index) => {
+                const option = document.createElement('div');
+                option.className = 'car-option';
+                option.onclick = () => {
+                    selectedCarSkin = index;
+                    carPopup.style.display = 'none';
+                };
+
+                const preview = document.createElement('div');
+                preview.className = 'car-preview';
+                preview.style.color = skin.color;
+                preview.textContent = skin.emoji;
+
+                const name = document.createElement('div');
+                name.textContent = skin.name;
+
+                option.appendChild(preview);
+                option.appendChild(name);
+                carPopup.appendChild(option);
+            });
+        }
+
+        renderCarPopup();
+
+        // คลิกนอก popup เพื่อปิด
+        document.addEventListener('click', (e) => {
+            if (!carPopup.contains(e.target) && !carPopupBtn.contains(e.target)) {
+                carPopup.style.display = 'none';
+            }
+        });
+
+        let selectedCarSkin = 0;
+
+        let gameState = {
+            isPlaying: false,
+            isPaused: false,
+            time: 0,
+            score: 0,
+            speed: 1.0,
+            position: 0,
+            targetPosition: 100,
+            correctAnswers: 0,
+            totalQuestions: 0,
+            currentQuestion: null,
+            questionAnswered: false,
+            timeLimit: 3000,
+            questionStartTime: 0
+        };
+
+        const questions = [
+            {
+                question: '∫ x dx = ?',
+                answers: ['x²/2 + C', 'x² + C', '2x + C', 'x³/3 + C'],
+                correct: 0
+            },
+            {
+                question: '∫ 2x dx = ?',
+                answers: ['x² + C', '2x² + C', 'x³ + C', 'x²/2 + C'],
+                correct: 0
+            },
+            {
+                question: '∫ x² dx = ?',
+                answers: ['x³/3 + C', 'x³ + C', '2x² + C', 'x⁴/4 + C'],
+                correct: 0
+            },
+            {
+                question: '∫ 3x² dx = ?',
+                answers: ['x³ + C', '3x³ + C', 'x³/3 + C', '6x + C'],
+                correct: 0
+            },
+            {
+                question: '∫ 1 dx = ?',
+                answers: ['x + C', '1 + C', 'C', '0'],
+                correct: 0
+            },
+            {
+                question: '∫ 4x³ dx = ?',
+                answers: ['x⁴ + C', '4x⁴ + C', '12x² + C', 'x⁴/4 + C'],
+                correct: 0
+            },
+            {
+                question: '∫ (2x + 3) dx = ?',
+                answers: ['x² + 3x + C', '2x² + 3x + C', 'x² + 3 + C', '2x + C'],
+                correct: 0
+            },
+            {
+                question: '∫ 5 dx = ?',
+                answers: ['5x + C', '5 + C', 'x + C', '0'],
+                correct: 0
+            },
+            {
+                question: '∫ x³ dx = ?',
+                answers: ['x⁴/4 + C', 'x⁴ + C', '3x² + C', 'x³/3 + C'],
+                correct: 0
+            },
+            {
+                question: '∫ (x² + 2x) dx = ?',
+                answers: ['x³/3 + x² + C', 'x³ + 2x² + C', 'x³/3 + 2x + C', '3x² + 2 + C'],
+                correct: 0
+            },
+            {
+                question: '∫ 6x⁵ dx = ?',
+                answers: ['x⁶ + C', '6x⁶ + C', '30x⁴ + C', 'x⁶/6 + C'],
+                correct: 0
+            },
+            {
+                question: '∫ (3x² - 2x) dx = ?',
+                answers: ['x³ - x² + C', '3x³ - 2x² + C', 'x³ - 2x + C', '6x - 2 + C'],
+                correct: 0
+            },
+            {
+                question: '∫ cos(x) dx = ?',
+                answers: ['sin(x) + C', '-sin(x) + C', 'cos(x) + C', '-cos(x) + C'],
+                correct: 0
+            },
+            {
+                question: '∫ sin(x) dx = ?',
+                answers: ['-cos(x) + C', 'cos(x) + C', '-sin(x) + C', 'sin(x) + C'],
+                correct: 0
+            },
+            {
+                question: '∫ e^x dx = ?',
+                answers: ['e^x + C', 'x·e^x + C', 'e^(x+1) + C', 'e^x/x + C'],
+                correct: 0
+            },
+            {
+                question: '∫ 1/x dx = ?',
+                answers: ['ln|x| + C', 'x² + C', '1/x² + C', '-1/x² + C'],
+                correct: 0
+            },
+            {
+                question: '∫ 2e^x dx = ?',
+                answers: ['2e^x + C', 'e^x + C', '2xe^x + C', 'e^(2x) + C'],
+                correct: 0
+            },
+            {
+                question: '∫ (4x³ + 2x) dx = ?',
+                answers: ['x⁴ + x² + C', '4x⁴ + 2x² + C', 'x⁴ + 2x + C', '12x² + 2 + C'],
+                correct: 0
+            },
+            {
+                question: '∫ √x dx = ?',
+                answers: ['(2/3)x^(3/2) + C', 'x^(3/2) + C', '(1/2)x² + C', '2√x + C'],
+                correct: 0
+            },
+            {
+                question: '∫ 3cos(x) dx = ?',
+                answers: ['3sin(x) + C', '-3sin(x) + C', '3cos(x) + C', 'sin(x) + C'],
+                correct: 0
+            },
+            {
+                question: '∫ x⁴ dx = ?',
+                answers: ['x⁵/5 + C', 'x⁵ + C', '4x³ + C', 'x⁴/4 + C'],
+                correct: 0
+            },
+            {
+                question: '∫ (x² + 2x + 1) dx = ?',
+                answers: ['x³/3 + x² + x + C', 'x³ + 2x² + x + C', 'x² + 2x + C', '2x³/3 + x² + C'],
+                correct: 0
+            },
+            {
+                question: '∫ 2sin(x) dx = ?',
+                answers: ['-2cos(x) + C', '2cos(x) + C', '-sin(x) + C', '2sin(x) + C'],
+                correct: 0
+            },
+            {
+                question: '∫ 5e^x dx = ?',
+                answers: ['5e^x + C', 'e^x + C', '5xe^x + C', 'e^(5x) + C'],
+                correct: 0
+            },
+            {
+                question: '∫ (6x² + 4x + 2) dx = ?',
+                answers: ['2x³ + 2x² + 2x + C', '6x³ + 4x² + 2x + C', '2x³ + 4x + 2 + C', '12x + 4 + C'],
+                correct: 0
+            },
+            {
+                question: '∫ x^(-2) dx = ?',
+                answers: ['-1/x + C', '-x^(-1) + C', 'ln|x| + C', 'x^(-1) + C'],
+                correct: 0
+            },
+            {
+                question: '∫ 4/x dx = ?',
+                answers: ['4ln|x| + C', 'ln|4x| + C', '4/x² + C', '-4/x² + C'],
+                correct: 0
+            },
+            {
+                question: '∫ (x² - 1) dx = ?',
+                answers: ['x³/3 - x + C', 'x³ - x + C', 'x³/3 - 1 + C', '2x - 1 + C'],
+                correct: 0
+            },
+            {
+                question: '∫ 7x⁶ dx = ?',
+                answers: ['x⁷ + C', '7x⁷ + C', '42x⁵ + C', 'x⁷/7 + C'],
+                correct: 0
+            },
+            {
+                question: '∫ sec²(x) dx = ?',
+                answers: ['tan(x) + C', 'sec(x) + C', 'cot(x) + C', 'sin(x) + C'],
+                correct: 0
+            }
+        ];
+
+        let animationId;
+        let startTime;
+
+        function drawTrack() {
+            ctx.fillStyle = '#e9ecef';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // วาดเส้นกราฟพื้นหลัง
+            ctx.strokeStyle = '#dee2e6';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 10; i++) {
+                ctx.beginPath();
+                ctx.moveTo(0, i * 40);
+                ctx.lineTo(canvas.width, i * 40);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(i * 80, 0);
+                ctx.lineTo(i * 80, canvas.height);
+                ctx.stroke();
+            }
+
+            // วาดเส้นทางแข่ง (กราฟฟังก์ชัน sin)
+            ctx.strokeStyle = '#667eea';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            for (let x = 0; x < canvas.width; x++) {
+                const y = 200 + Math.sin(x * 0.02 + gameState.time * 0.001) * 80;
+                if (x === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.stroke();
+
+            // วาดเส้นชัย
+            ctx.strokeStyle = '#f5576c';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([10, 5]);
+            ctx.beginPath();
+            ctx.moveTo(canvas.width - 20, 0);
+            ctx.lineTo(canvas.width - 20, canvas.height);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function drawCar() {
+            const progress = gameState.position / gameState.targetPosition;
+            const x = progress * (canvas.width - 40);
+            const y = 200 + Math.sin(x * 0.02 + gameState.time * 0.001) * 80;
+
+            // วาดเงารถ
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.ellipse(x + 20, y + 35, 25, 10, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // วาดตัวรถ
+            ctx.fillStyle = carSkins[selectedCarSkin].color;
+            ctx.beginPath();
+            ctx.arc(x + 20, y, 20, 0, Math.PI * 2);
+            ctx.fill();
+
+            // วาดไฟหน้า
+            ctx.fillStyle = '#ffeb3b';
+            ctx.beginPath();
+            ctx.arc(x + 30, y, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // วาดเอฟเฟกต์ความเร็ว
+            if (gameState.speed > 1.0) {
+                ctx.strokeStyle = 'rgba(255, 235, 59, 0.5)';
+                ctx.lineWidth = 2;
+                for (let i = 0; i < 3; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(x - i * 10, y);
+                    ctx.lineTo(x - i * 10 - 15, y);
+                    ctx.stroke();
+                }
+            }
+
+            // วาดข้อความความเร็ว
+            if (gameState.speed > 1.0) {
+                ctx.fillStyle = '#ff9800';
+                ctx.font = 'bold 14px Arial';
+                ctx.fillText('BOOST!', x - 10, y - 30);
+            }
+        }
+
+        function updateGame() {
+            if (!gameState.isPlaying || gameState.isPaused) return;
+
+            gameState.time += 16;
+            gameState.position += gameState.speed * 0.08;
+
+            // ลดความเร็วทีละน้อย
+            if (gameState.speed > 1.0) {
+                gameState.speed -= 0.005;
+                if (gameState.speed < 1.0) gameState.speed = 1.0;
+            }
+
+            // ตรวจสอบเวลาคงเหลือในการตอบคำถาม
+            if (!gameState.questionAnswered && gameState.questionStartTime > 0) {
+                const elapsed = Date.now() - gameState.questionStartTime;
+                const timeLeft = Math.max(0, gameState.timeLimit - elapsed);
+                
+                if (timeLeft === 0) {
+                    // หมดเวลา ถือว่าตอบผิด
+                    gameState.questionAnswered = true;
+                    gameState.totalQuestions++;
+                    gameState.speed = Math.max(0.5, gameState.speed - 0.3);
+                    gameState.timeLimit = Math.max(1500, gameState.timeLimit - 500); // ลดเวลา 0.5 วินาที แต่ไม่ต่ำกว่า 1.5 วินาที
+                    
+                    const buttons = document.querySelectorAll('.answer-btn');
+                    buttons.forEach(b => b.disabled = true);
+                    buttons[gameState.currentQuestion.correct].classList.add('correct');
+                    
+                    setTimeout(() => {
+                        generateQuestion();
+                    }, 1000);
+                }
+            }
+
+            updateStats();
+            drawTrack();
+            drawCar();
+
+            // ตรวจสอบการชนะ
+            if (gameState.position >= gameState.targetPosition) {
+                endGame();
+                return;
+            }
+
+            animationId = requestAnimationFrame(updateGame);
+        }
+
+        function updateStats() {
+            document.getElementById('time').textContent = (gameState.time / 1000).toFixed(1) + 's';
+            document.getElementById('score').textContent = gameState.score;
+            document.getElementById('speed').textContent = gameState.speed.toFixed(1) + 'x';
+            document.getElementById('distance').textContent = Math.min(100, Math.floor((gameState.position / gameState.targetPosition) * 100)) + '%';
+            
+            // อัพเดทเวลาเหลือ
+            if (!gameState.questionAnswered && gameState.questionStartTime > 0) {
+                const elapsed = Date.now() - gameState.questionStartTime;
+                const timeLeft = Math.max(0, (gameState.timeLimit - elapsed) / 1000);
+                const timeLeftEl = document.getElementById('timeLeft');
+                timeLeftEl.textContent = timeLeft.toFixed(1) + 's';
+                
+                // เปลี่ยนสีเมื่อเวลาใกล้หมด
+                if (timeLeft <= 3) {
+                    timeLeftEl.style.color = '#ff5252';
+                } else if (timeLeft <= 5) {
+                    timeLeftEl.style.color = '#ffa726';
+                } else {
+                    timeLeftEl.style.color = 'white';
+                }
+            }
+        }
+
+        function generateQuestion() {
+            const question = questions[Math.floor(Math.random() * questions.length)];
+            gameState.currentQuestion = question;
+            gameState.questionAnswered = false;
+            gameState.questionStartTime = Date.now();
+            
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('timeLeft').textContent = (gameState.timeLimit / 1000).toFixed(1) + 's';
+            document.getElementById('timeLeft').style.color = 'white';
+            
+            const container = document.getElementById('answersContainer');
+            container.innerHTML = '';
+            
+            // สร้าง array ของคำตอบพร้อม index เดิม
+            const shuffledAnswers = question.answers.map((answer, index) => ({
+                text: answer,
+                originalIndex: index
+            }));
+            
+            // สุ่มลำดับคำตอบ (Fisher-Yates Shuffle)
+            for (let i = shuffledAnswers.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledAnswers[i], shuffledAnswers[j]] = [shuffledAnswers[j], shuffledAnswers[i]];
+            }
+            
+            // แสดงคำตอบที่สุ่มแล้ว
+            shuffledAnswers.forEach((item) => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = item.text;
+                btn.onclick = () => checkAnswer(item.originalIndex, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, btn) {
+            if (gameState.questionAnswered) return;
+            
+            gameState.questionAnswered = true;
+            gameState.totalQuestions++;
+            
+            const buttons = document.querySelectorAll('.answer-btn');
+            buttons.forEach(b => b.disabled = true);
+            
+            if (selectedIndex === gameState.currentQuestion.correct) {
+                btn.classList.add('correct');
+                gameState.correctAnswers++;
+                gameState.score += Math.floor(100 * gameState.speed);
+                gameState.speed = Math.min(3.0, gameState.speed + 0.5);
+                
+                // ตอบถูก: เพิ่มเวลา 2 วินาที (สูงสุด 8 วินาที)
+                gameState.timeLimit = Math.min(8000, gameState.timeLimit + 2000);
+                
+                setTimeout(() => {
+                    generateQuestion();
+                }, 1000);
+            } else {
+                btn.classList.add('wrong');
+                buttons[gameState.currentQuestion.correct].classList.add('correct');
+                gameState.speed = Math.max(0.5, gameState.speed - 0.3);
+                
+                // ตอบผิด: ลดเวลา 0.5 วินาที (ต่ำสุด 1.5 วินาที)
+                gameState.timeLimit = Math.max(1500, gameState.timeLimit - 500);
+                
+                setTimeout(() => {
+                    generateQuestion();
+                }, 1000);
+            }
+        }
+
+        function startGame() {
+            gameState = {
+                isPlaying: true,
+                isPaused: false,
+                time: 0,
+                score: 0,
+                speed: 1.0,
+                position: 0,
+                targetPosition: 100,
+                correctAnswers: 0,
+                totalQuestions: 0,
+                currentQuestion: null,
+                questionAnswered: false,
+                timeLimit: 3000,
+                questionStartTime: 0
+            };
+            
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('pauseBtn').style.display = 'inline-block';
+            document.getElementById('gameOver').style.display = 'none';
+            document.getElementById('questionPanel').style.display = 'block';
+            
+            generateQuestion();
+            updateGame();
+        }
+
+        function togglePause() {
+            gameState.isPaused = !gameState.isPaused;
+            const btn = document.getElementById('pauseBtn');
+            btn.textContent = gameState.isPaused ? '▶️ เล่นต่อ' : '⏸️ หยุดชั่วคราว';
+            
+            if (!gameState.isPaused) {
+                updateGame();
+            }
+        }
+
+        function endGame() {
+            gameState.isPlaying = false;
+            cancelAnimationFrame(animationId);
+            
+            const accuracy = gameState.totalQuestions > 0 
+                ? (gameState.correctAnswers / gameState.totalQuestions * 100).toFixed(0) 
+                : 0;
+            
+            document.getElementById('finalScore').textContent = 
+                `คะแนนรวม: ${gameState.score} แต้ม (ตอบถูก ${gameState.correctAnswers}/${gameState.totalQuestions} ข้อ - ${accuracy}%)`;
+            document.getElementById('finalTime').textContent = 
+                `ใช้เวลา: ${(gameState.time / 1000).toFixed(1)} วินาที`;
+            
+            document.getElementById('gameOver').style.display = 'block';
+            document.getElementById('questionPanel').style.display = 'none';
+            document.getElementById('pauseBtn').style.display = 'none';
+        }
+        function restartGame() {
+            document.getElementById('gameOver').style.display = 'none';
+            document.getElementById('startBtn').style.display = 'inline-block';
+            document.getElementById('questionPanel').style.display = 'none';
+            document.getElementById('pauseBtn').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
