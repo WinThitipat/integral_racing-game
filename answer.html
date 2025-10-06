@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎓 เฉลยโจทย์อินทิกรัล</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding: 30px;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 40px;
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 2.8em;
+            }
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1em;
+        }
+
+        @media (min-width: 768px) {
+            .subtitle {
+                font-size: 1.2em;
+            }
+        }
+
+        .search-box {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 1em;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        @media (min-width: 768px) {
+            .search-input {
+                padding: 15px 25px;
+                font-size: 1.1em;
+            }
+        }
+
+        .search-input:focus {
+            border-color: #764ba2;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        @media (min-width: 768px) {
+            .filter-buttons {
+                gap: 10px;
+            }
+        }
+
+        .filter-btn {
+            padding: 8px 15px;
+            background: #f0f0f0;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+            font-weight: 600;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        @media (min-width: 768px) {
+            .filter-btn {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+        }
+
+        .filter-btn:active {
+            transform: scale(0.95);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        @media (hover: hover) {
+            .filter-btn:hover {
+                background: #e0e0e0;
+            }
+
+            .filter-btn.active:hover {
+                background: linear-gradient(135deg, #7b8ff0 0%, #8b5fb2 100%);
+            }
+        }
+
+        .solution-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s;
+        }
+
+        @media (min-width: 768px) {
+            .solution-card {
+                padding: 25px;
+            }
+        }
+
+        .solution-card:hover {
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .question-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        @media (min-width: 768px) {
+            .question-number {
+                padding: 5px 15px;
+                font-size: 1em;
+            }
+        }
+
+        .question {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        @media (min-width: 768px) {
+            .question {
+                font-size: 1.5em;
+            }
+        }
+
+        .answer {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 2px solid #4caf50;
+        }
+
+        .answer-label {
+            color: #4caf50;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        @media (min-width: 768px) {
+            .answer-label {
+                font-size: 1em;
+            }
+        }
+
+        .answer-value {
+            font-size: 1.1em;
+            color: #333;
+            font-weight: bold;
+        }
+
+        @media (min-width: 768px) {
+            .answer-value {
+                font-size: 1.3em;
+            }
+        }
+
+        .explanation {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #2196f3;
+        }
+
+        @media (min-width: 768px) {
+            .explanation {
+                padding: 20px;
+            }
+        }
+
+        .explanation-title {
+            color: #2196f3;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        @media (min-width: 768px) {
+            .explanation-title {
+                font-size: 1.1em;
+            }
+        }
+
+        .step {
+            margin: 10px 0;
+            padding-left: 20px;
+            position: relative;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        @media (min-width: 768px) {
+            .step {
+                font-size: 1em;
+            }
+        }
+
+        .step:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #2196f3;
+            font-weight: bold;
+        }
+
+        .formula {
+            background: #e3f2fd;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            color: #1565c0;
+            overflow-x: auto;
+        }
+
+        @media (min-width: 768px) {
+            .formula {
+                font-size: 1.1em;
+            }
+        }
+
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        @media (min-width: 768px) {
+            .note {
+                font-size: 0.95em;
+            }
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .category-badge {
+                font-size: 0.85em;
+            }
+        }
+
+        .category-polynomial {
+            background: #e1f5fe;
+            color: #0277bd;
+        }
+
+        .category-trigonometric {
+            background: #f3e5f5;
+            color: #6a1b9a;
+        }
+
+        .category-exponential {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .category-logarithmic {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 1.1em;
+        }
+
+        @media (min-width: 768px) {
+            .no-results {
+                font-size: 1.2em;
+            }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        @media (min-width: 768px) {
+            .stats {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 15px;
+            }
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .stat-box {
+                padding: 20px;
+            }
+        }
+
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        @media (min-width: 768px) {
+            .stat-number {
+                font-size: 2em;
+            }
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        @media (min-width: 768px) {
+            .stat-label {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 เฉลยโจทย์อินทิกรัล</h1>
+            <p class="subtitle">คำอธิบายละเอียดพร้อมขั้นตอนการแก้ปัญหา</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number" id="totalQuestions">30</div>
+                <div class="stat-label">โจทย์ทั้งหมด</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="polynomialCount">19</div>
+                <div class="stat-label">พหุนาม</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="trigCount">6</div>
+                <div class="stat-label">ตรีโกณมิติ</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="specialCount">5</div>
+                <div class="stat-label">ฟังก์ชันพิเศษ</div>
+            </div>
+        </div>
+
+        <div class="search-box">
+            <input type="text" class="search-input" id="searchInput" placeholder="🔍 ค้นหาโจทย์... (เช่น x², sin, cos, e^x, ln)">
+        </div>
+
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">ทั้งหมด</button>
+            <button class="filter-btn" data-filter="polynomial">พหุนาม</button>
+            <button class="filter-btn" data-filter="trigonometric">ตรีโกณมิติ</button>
+            <button class="filter-btn" data-filter="exponential">Exponential</button>
+            <button class="filter-btn" data-filter="logarithmic">Logarithm</button>
+        </div>
+
+        <div id="solutionsContainer"></div>
+    </div>
+
+    <script>
+        const solutions = [
+            {
+                question: '∫ x dx = ?',
+                answer: 'x²/2 + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'กฎการหาอินทิกรัลของ x^n',
+                    formula: '∫ x^n dx = x^(n+1)/(n+1) + C',
+                    steps: [
+                        'ในโจทย์นี้ x = x¹ ดังนั้น n = 1',
+                        'ใช้สูตร: ∫ x^n dx = x^(n+1)/(n+1) + C',
+                        'แทนค่า: x^(1+1)/(1+1) = x²/2',
+                        'เติม constant of integration: x²/2 + C'
+                    ],
+                    note: 'C คือค่าคงที่ของการหาอินทิกรัล (constant of integration) ซึ่งจำเป็นต้องเติมเสมอเพราะ derivative ของค่าคงที่เป็น 0'
+                }
+            },
+            {
+                question: '∫ 2x dx = ?',
+                answer: 'x² + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'ดึงค่าคงที่ออกมาข้างหน้า',
+                    formula: '∫ kf(x) dx = k∫ f(x) dx',
+                    steps: [
+                        'ดึง 2 ออกมาข้างหน้า: 2∫ x dx',
+                        'หา ∫ x dx = x²/2',
+                        'คูณกลับเข้าไป: 2 × x²/2 = x²',
+                        'คำตอบ: x² + C'
+                    ],
+                    note: 'สามารถดึงค่าคงที่ (coefficient) ออกมาข้างนอกเครื่องหมายอินทิกรัลได้เสมอ'
+                }
+            },
+            {
+                question: '∫ x² dx = ?',
+                answer: 'x³/3 + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'กฎการหาอินทิกรัลของ x^n',
+                    formula: '∫ x^n dx = x^(n+1)/(n+1) + C',
+                    steps: [
+                        'ในโจทย์นี้ n = 2',
+                        'เพิ่มเลขชี้กำลัง: 2 + 1 = 3',
+                        'หารด้วยเลขชี้กำลังใหม่: x³/3',
+                        'คำตอบ: x³/3 + C'
+                    ],
+                    note: 'การหาอินทิกรัลเป็นการกลับกันของการหาอนุพันธ์ (derivative)'
+                }
+            },
+            {
+                question: '∫ 3x² dx = ?',
+                answer: 'x³ + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'ดึงค่าคงที่ออกมาข้างหน้า',
+                    formula: '∫ kx^n dx = k × x^(n+1)/(n+1) + C',
+                    steps: [
+                        'ดึง 3 ออกมา: 3∫ x² dx',
+                        'หา ∫ x² dx = x³/3',
+                        'คูณกลับ: 3 × x³/3 = x³',
+                        'คำตอบ: x³ + C'
+                    ],
+                    note: 'สังเกตว่า 3 และ 3 หักล้างกัน ทำให้ได้ x³ โดยตรง'
+                }
+            },
+            {
+                question: '∫ 1 dx = ?',
+                answer: 'x + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'อินทิกรัลของค่าคงที่',
+                    formula: '∫ k dx = kx + C',
+                    steps: [
+                        '1 สามารถเขียนเป็น 1 × x⁰',
+                        'หรือคิดง่ายๆ: ฟังก์ชันที่หาอนุพันธ์แล้วได้ 1 คือ x',
+                        'ตรวจสอบ: d/dx(x) = 1 ✓',
+                        'คำตอบ: x + C'
+                    ],
+                    note: 'การหาอินทิกรัลของค่าคงที่ คือ นำค่าคงที่นั้นมาคูณกับ x'
+                }
+            },
+            {
+                question: '∫ 4x³ dx = ?',
+                answer: 'x⁴ + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'กฎการหาอินทิกรัลพร้อมค่าคงที่',
+                    formula: '∫ kx^n dx = k × x^(n+1)/(n+1) + C',
+                    steps: [
+                        'ดึง 4 ออกมา: 4∫ x³ dx',
+                        'เพิ่มเลขชี้กำลัง: 3 + 1 = 4',
+                        'หาร: x⁴/4',
+                        'คูณกลับ: 4 × x⁴/4 = x⁴ + C'
+                    ],
+                    note: '4 และ 4 หักล้างกัน'
+                }
+            },
+            {
+                question: '∫ (2x + 3) dx = ?',
+                answer: 'x² + 3x + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'แยกอินทิกรัลของผลบวก',
+                    formula: '∫ [f(x) + g(x)] dx = ∫ f(x) dx + ∫ g(x) dx',
+                    steps: [
+                        'แยกเป็น: ∫ 2x dx + ∫ 3 dx',
+                        'หาอินทิกรัลแต่ละพจน์:',
+                        '  • ∫ 2x dx = x²',
+                        '  • ∫ 3 dx = 3x',
+                        'รวมกัน: x² + 3x + C'
+                    ],
+                    note: 'อินทิกรัลของผลบวกหรือผลลบ = ผลบวกหรือผลลบของอินทิกรัล'
+                }
+            },
+            {
+                question: '∫ 5 dx = ?',
+                answer: '5x + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'อินทิกรัลของค่าคงที่',
+                    formula: '∫ k dx = kx + C',
+                    steps: [
+                        'นำค่าคงที่ 5 มาคูณกับ x',
+                        'ตรวจสอบ: d/dx(5x) = 5 ✓',
+                        'คำตอบ: 5x + C'
+                    ],
+                    note: 'ฟังก์ชันที่มีอนุพันธ์เป็นค่าคงที่ คือ ฟังก์ชันเชิงเส้น kx'
+                }
+            },
+            {
+                question: '∫ x³ dx = ?',
+                answer: 'x⁴/4 + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'กฎ Power Rule',
+                    formula: '∫ x^n dx = x^(n+1)/(n+1) + C',
+                    steps: [
+                        'n = 3',
+                        'เพิ่มเลขชี้กำลัง: 3 + 1 = 4',
+                        'หารด้วย 4: x⁴/4',
+                        'คำตอบ: x⁴/4 + C'
+                    ],
+                    note: 'ตรวจสอบ: d/dx(x⁴/4) = 4x³/4 = x³ ✓'
+                }
+            },
+            {
+                question: '∫ (x² + 2x) dx = ?',
+                answer: 'x³/3 + x² + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'แยกอินทิกรัลของผลบวก',
+                    formula: '∫ [f(x) + g(x)] dx = ∫ f(x) dx + ∫ g(x) dx',
+                    steps: [
+                        'แยกเป็น: ∫ x² dx + ∫ 2x dx',
+                        '∫ x² dx = x³/3',
+                        '∫ 2x dx = 2(x²/2) = x²',
+                        'รวมกัน: x³/3 + x² + C'
+                    ],
+                    note: 'ใช้เพียง C เดียวสำหรับทั้งสมการ ไม่ใช่ C₁, C₂'
+                }
+            },
+            {
+                question: '∫ 6x⁵ dx = ?',
+                answer: 'x⁶ + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'Power Rule พร้อมค่าคงที่',
+                    formula: '∫ kx^n dx = k × x^(n+1)/(n+1) + C',
+                    steps: [
+                        '6∫ x⁵ dx',
+                        '∫ x⁵ dx = x⁶/6',
+                        'คูณกลับ: 6 × x⁶/6 = x⁶',
+                        'คำตอบ: x⁶ + C'
+                    ],
+                    note: '6 หักล้างกับ 6 ในตัวส่วน'
+                }
+            },
+            {
+                question: '∫ (3x² - 2x) dx = ?',
+                answer: 'x³ - x² + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'แยกอินทิกรัลของผลลบ',
+                    formula: '∫ [f(x) - g(x)] dx = ∫ f(x) dx - ∫ g(x) dx',
+                    steps: [
+                        'แยกเป็น: ∫ 3x² dx - ∫ 2x dx',
+                        '∫ 3x² dx = 3(x³/3) = x³',
+                        '∫ 2x dx = 2(x²/2) = x²',
+                        'รวมกัน: x³ - x² + C'
+                    ],
+                    note: 'เครื่องหมาย - ยังคงอยู่ระหว่างพจน์'
+                }
+            },
+            {
+                question: '∫ cos(x) dx = ?',
+                answer: 'sin(x) + C',
+                category: 'trigonometric',
+                explanation: {
+                    rule: 'อินทิกรัลของ Cosine',
+                    formula: '∫ cos(x) dx = sin(x) + C',
+                    steps: [
+                        'จำสูตรพื้นฐาน: อนุพันธ์ของ sin(x) = cos(x)',
+                        'ดังนั้น อินทิกรัลของ cos(x) = sin(x)',
+                        'คำตอบ: sin(x) + C'
+                    ],
+                    note: 'ตรวจสอบ: d/dx[sin(x)] = cos(x) ✓'
+                }
+            },
+            {
+                question: '∫ sin(x) dx = ?',
+                answer: '-cos(x) + C',
+                category: 'trigonometric',
+                explanation: {
+                    rule: 'อินทิกรัลของ Sine',
+                    formula: '∫ sin(x) dx = -cos(x) + C',
+                    steps: [
+                        'จำสูตรพื้นฐาน: d/dx[cos(x)] = -sin(x)',
+                        'ดังนั้น d/dx[-cos(x)] = sin(x)',
+                        'อินทิกรัลของ sin(x) = -cos(x)',
+                        'คำตอบ: -cos(x) + C'
+                    ],
+                    note: 'อย่าลืมเครื่องหมายลบหน้า cos(x)!'
+                }
+            },
+            {
+                question: '∫ e^x dx = ?',
+                answer: 'e^x + C',
+                category: 'exponential',
+                explanation: {
+                    rule: 'อินทิกรัลของ e^x',
+                    formula: '∫ e^x dx = e^x + C',
+                    steps: [
+                        'e^x เป็นฟังก์ชันพิเศษที่อนุพันธ์ของมันเป็นตัวมันเอง',
+                        'd/dx[e^x] = e^x',
+                        'ดังนั้น ∫ e^x dx = e^x',
+                        'คำตอบ: e^x + C'
+                    ],
+                    note: 'e^x เป็นฟังก์ชันเดียวที่อนุพันธ์และอินทิกรัลเหมือนกัน'
+                }
+            },
+            {
+                question: '∫ 1/x dx = ?',
+                answer: 'ln|x| + C',
+                category: 'logarithmic',
+                explanation: {
+                    rule: 'อินทิกรัลของ 1/x',
+                    formula: '∫ 1/x dx = ln|x| + C',
+                    steps: [
+                        '1/x = x⁻¹ ไม่สามารถใช้ power rule ได้ (n ≠ -1)',
+                        'นี่เป็นกรณีพิเศษที่มีสูตรเฉพาะ',
+                        'd/dx[ln|x|] = 1/x',
+                        'คำตอบ: ln|x| + C'
+                    ],
+                    note: 'ใช้ |x| (absolute value) เพื่อให้ ln กำหนดได้สำหรับ x ทั้งบวกและลบ'
+                }
+            },
+            {
+                question: '∫ 2e^x dx = ?',
+                answer: '2e^x + C',
+                category: 'exponential',
+                explanation: {
+                    rule: 'ดึงค่าคงที่ออกมา',
+                    formula: '∫ ke^x dx = ke^x + C',
+                    steps: [
+                        'ดึง 2 ออกมา: 2∫ e^x dx',
+                        '∫ e^x dx = e^x',
+                        'คูณกลับ: 2 × e^x = 2e^x',
+                        'คำตอบ: 2e^x + C'
+                    ],
+                    note: 'e^x คงรูปแบบไว้ แค่คูณด้วยค่าคงที่'
+                }
+            },
+            {
+                question: '∫ (4x³ + 2x) dx = ?',
+                answer: 'x⁴ + x² + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'แยกอินทิกรัลและใช้ power rule',
+                    formula: '∫ [f(x) + g(x)] dx = ∫ f(x) dx + ∫ g(x) dx',
+                    steps: [
+                        'แยกเป็น: ∫ 4x³ dx + ∫ 2x dx',
+                        '∫ 4x³ dx = 4(x⁴/4) = x⁴',
+                        '∫ 2x dx = 2(x²/2) = x²',
+                        'รวมกัน: x⁴ + x² + C'
+                    ],
+                    note: 'ค่าคงที่หักล้างกันในทั้งสองพจน์'
+                }
+            },
+            {
+                question: '∫ √x dx = ?',
+                answer: '(2/3)x^(3/2) + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'Power Rule สำหรับเศษส่วน',
+                    formula: '∫ x^n dx = x^(n+1)/(n+1) + C',
+                    steps: [
+                        'เขียน √x เป็น x^(1/2)',
+                        'ใช้สูตร: n = 1/2',
+                        'n + 1 = 1/2 + 1 = 3/2',
+                        'x^(3/2) / (3/2) = x^(3/2) × (2/3) = (2/3)x^(3/2)',
+                        'คำตอบ: (2/3)x^(3/2) + C'
+                    ],
+                    note: 'การหารด้วยเศษส่วน = คูณด้วยส่วนกลับ: 1/(3/2) = 2/3'
+                }
+            },
+            {
+                question: '∫ 3cos(x) dx = ?',
+                answer: '3sin(x) + C',
+                category: 'trigonometric',
+                explanation: {
+                    rule: 'อินทิกรัลของ cosine พร้อมค่าคงที่',
+                    formula: '∫ k·cos(x) dx = k·sin(x) + C',
+                    steps: [
+                        'ดึง 3 ออกมา: 3∫ cos(x) dx',
+                        '∫ cos(x) dx = sin(x)',
+                        'คูณกลับ: 3 × sin(x) = 3sin(x)',
+                        'คำตอบ: 3sin(x) + C'
+                    ],
+                    note: 'ค่าคงที่ยังคงอยู่หน้าฟังก์ชันตรีโกณมิติ'
+                }
+            },
+            {
+                question: '∫ x⁴ dx = ?',
+                answer: 'x⁵/5 + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'Power Rule',
+                    formula: '∫ x^n dx = x^(n+1)/(n+1) + C',
+                    steps: [
+                        'n = 4',
+                        'เพิ่มเลขชี้กำลัง: 4 + 1 = 5',
+                        'หารด้วยเลขชี้กำลังใหม่: x⁵/5',
+                        'คำตอบ: x⁵/5 + C'
+                    ],
+                    note: 'ตรวจสอบ: d/dx(x⁵/5) = 5x⁴/5 = x⁴ ✓'
+                }
+            },
+            {
+                question: '∫ (x² + 2x + 1) dx = ?',
+                answer: 'x³/3 + x² + x + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'แยกอินทิกรัลของพหุนาม',
+                    formula: '∫ [f(x) + g(x) + h(x)] dx = ∫f(x)dx + ∫g(x)dx + ∫h(x)dx',
+                    steps: [
+                        'แยกเป็น: ∫ x² dx + ∫ 2x dx + ∫ 1 dx',
+                        '∫ x² dx = x³/3',
+                        '∫ 2x dx = x²',
+                        '∫ 1 dx = x',
+                        'รวมกัน: x³/3 + x² + x + C'
+                    ],
+                    note: 'นี่คือการแยก (x+1)² = x² + 2x + 1'
+                }
+            },
+            {
+                question: '∫ 2sin(x) dx = ?',
+                answer: '-2cos(x) + C',
+                category: 'trigonometric',
+                explanation: {
+                    rule: 'อินทิกรัลของ sine พร้อมค่าคงที่',
+                    formula: '∫ k·sin(x) dx = -k·cos(x) + C',
+                    steps: [
+                        'ดึง 2 ออกมา: 2∫ sin(x) dx',
+                        '∫ sin(x) dx = -cos(x)',
+                        'คูณกลับ: 2 × (-cos(x)) = -2cos(x)',
+                        'คำตอบ: -2cos(x) + C'
+                    ],
+                    note: 'อย่าลืมเครื่องหมายลบ!'
+                }
+            },
+            {
+                question: '∫ 5e^x dx = ?',
+                answer: '5e^x + C',
+                category: 'exponential',
+                explanation: {
+                    rule: 'อินทิกรัลของ e^x พร้อมค่าคงที่',
+                    formula: '∫ ke^x dx = ke^x + C',
+                    steps: [
+                        'ดึง 5 ออกมา: 5∫ e^x dx',
+                        '∫ e^x dx = e^x',
+                        'คูณกลับ: 5 × e^x = 5e^x',
+                        'คำตอบ: 5e^x + C'
+                    ],
+                    note: 'e^x ไม่เปลี่ยนแปลง เพียงคูณด้วยค่าคงที่'
+                }
+            },
+            {
+                question: '∫ (6x² + 4x + 2) dx = ?',
+                answer: '2x³ + 2x² + 2x + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'แยกอินทิกรัลทีละพจน์',
+                    formula: '∫ [ax² + bx + c] dx = ax³/3 + bx²/2 + cx + C',
+                    steps: [
+                        'แยกเป็น: ∫ 6x² dx + ∫ 4x dx + ∫ 2 dx',
+                        '∫ 6x² dx = 6(x³/3) = 2x³',
+                        '∫ 4x dx = 4(x²/2) = 2x²',
+                        '∫ 2 dx = 2x',
+                        'รวมกัน: 2x³ + 2x² + 2x + C'
+                    ],
+                    note: 'สังเกตว่าสามารถแยกตัวประกอบ 2 ออกมาได้: 2(x³ + x² + x) + C'
+                }
+            },
+            {
+                question: '∫ x^(-2) dx = ?',
+                answer: '-1/x + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'Power Rule สำหรับเลขชี้กำลังลบ',
+                    formula: '∫ x^n dx = x^(n+1)/(n+1) + C (n ≠ -1)',
+                    steps: [
+                        'n = -2',
+                        'n + 1 = -2 + 1 = -1',
+                        'x^(-1) / (-1) = -x^(-1) = -1/x',
+                        'คำตอบ: -1/x + C'
+                    ],
+                    note: 'ตรวจสอบ: d/dx(-1/x) = d/dx(-x^(-1)) = x^(-2) = 1/x² ✓'
+                }
+            },
+            {
+                question: '∫ 4/x dx = ?',
+                answer: '4ln|x| + C',
+                category: 'logarithmic',
+                explanation: {
+                    rule: 'อินทิกรัลของ k/x',
+                    formula: '∫ k/x dx = k·ln|x| + C',
+                    steps: [
+                        'ดึง 4 ออกมา: 4∫ (1/x) dx',
+                        '∫ (1/x) dx = ln|x|',
+                        'คูณกลับ: 4 × ln|x| = 4ln|x|',
+                        'คำตอบ: 4ln|x| + C'
+                    ],
+                    note: 'สามารถเขียนเป็น ln|x⁴| ได้ (ใช้กฎ logarithm: k·ln(x) = ln(x^k))'
+                }
+            },
+            {
+                question: '∫ (x² - 1) dx = ?',
+                answer: 'x³/3 - x + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'แยกอินทิกรัลของผลลบ',
+                    formula: '∫ [f(x) - g(x)] dx = ∫ f(x) dx - ∫ g(x) dx',
+                    steps: [
+                        'แยกเป็น: ∫ x² dx - ∫ 1 dx',
+                        '∫ x² dx = x³/3',
+                        '∫ 1 dx = x',
+                        'รวมกัน: x³/3 - x + C'
+                    ],
+                    note: 'สามารถแยกตัวประกอบเป็น (x-1)(x+1) ได้'
+                }
+            },
+            {
+                question: '∫ 7x⁶ dx = ?',
+                answer: 'x⁷ + C',
+                category: 'polynomial',
+                explanation: {
+                    rule: 'Power Rule พร้อมค่าคงที่',
+                    formula: '∫ kx^n dx = k × x^(n+1)/(n+1) + C',
+                    steps: [
+                        'ดึง 7 ออกมา: 7∫ x⁶ dx',
+                        '∫ x⁶ dx = x⁷/7',
+                        'คูณกลับ: 7 × x⁷/7 = x⁷',
+                        'คำตอบ: x⁷ + C'
+                    ],
+                    note: '7 หักล้างกับ 7 ในตัวส่วนพอดี'
+                }
+            },
+            {
+                question: '∫ sec²(x) dx = ?',
+                answer: 'tan(x) + C',
+                category: 'trigonometric',
+                explanation: {
+                    rule: 'อินทิกรัลของ sec²(x)',
+                    formula: '∫ sec²(x) dx = tan(x) + C',
+                    steps: [
+                        'จำสูตรพื้นฐาน: d/dx[tan(x)] = sec²(x)',
+                        'ดังนั้น อินทิกรัลของ sec²(x) คือ tan(x)',
+                        'คำตอบ: tan(x) + C'
+                    ],
+                    note: 'นี่เป็นสูตรสำคัญในตรีโกณมิติ ควรจำไว้'
+                }
+            }
+        ];
+
+        let currentFilter = 'all';
+        let searchTerm = '';
+
+        function renderSolutions() {
+            const container = document.getElementById('solutionsContainer');
+            const filtered = solutions.filter(sol => {
+                const matchFilter = currentFilter === 'all' || sol.category === currentFilter;
+                const matchSearch = sol.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                  sol.answer.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchFilter && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="no-results">😔 ไม่พบโจทย์ที่ตรงกับการค้นหา</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map((sol, index) => `
+                <div class="solution-card">
+                    <span class="question-number">ข้อที่ ${index + 1}</span>
+                    <span class="category-badge category-${sol.category}">${getCategoryName(sol.category)}</span>
+                    
+                    <div class="question">${sol.question}</div>
+                    
+                    <div class="answer">
+                        <div class="answer-label">✅ คำตอบ:</div>
+                        <div class="answer-value">${sol.answer}</div>
+                    </div>
+                    
+                    <div class="explanation">
+                        <div class="explanation-title">📖 คำอธิบาย: ${sol.explanation.rule}</div>
+                        
+                        <div class="formula">${sol.explanation.formula}</div>
+                        
+                        <div style="margin: 15px 0;">
+                            <strong style="color: #2196f3;">วิธีทำ:</strong>
+                            ${sol.explanation.steps.map(step => `<div class="step">${step}</div>`).join('')}
+                        </div>
+                        
+                        <div class="note">
+                            <strong>💡 หมายเหตุ:</strong> ${sol.explanation.note}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                'polynomial': 'พหุนาม',
+                'trigonometric': 'ตรีโกณมิติ',
+                'exponential': 'Exponential',
+                'logarithmic': 'Logarithm'
+            };
+            return names[category] || category;
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                renderSolutions();
+            });
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchTerm = e.target.value;
+            renderSolutions();
+        });
+
+        // Update stats
+        function updateStats() {
+            const categories = {
+                polynomial: 0,
+                trigonometric: 0,
+                exponential: 0,
+                logarithmic: 0
+            };
+
+            solutions.forEach(sol => {
+                categories[sol.category]++;
+            });
+
+            document.getElementById('totalQuestions').textContent = solutions.length;
+            document.getElementById('polynomialCount').textContent = categories.polynomial;
+            document.getElementById('trigCount').textContent = categories.trigonometric;
+            document.getElementById('specialCount').textContent = 
+                categories.exponential + categories.logarithmic;
+        }
+
+        // Initial render
+        updateStats();
+        renderSolutions();
+    </script>
+</body>
+</html>
